@@ -1,0 +1,82 @@
+/* HM Mega Menu - scoped styles */
+.hm-has-mega {
+  position: relative;
+}
+
+/* Panel default hidden */
+.hm-has-mega > .hm-mega-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 9999;
+
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+
+  background: #fff;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+
+  padding: 24px 0;
+}
+
+/* Open on hover (desktop) */
+@media (hover: hover) and (pointer: fine) {
+  .hm-has-mega:hover > .hm-mega-panel {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Inner container (keeps content aligned) */
+.hm-has-mega > .hm-mega-panel > .hm-mega-inner {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* Grid baseline */
+.hm-mega-inner {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+/* Column demo styles (future blocks will use these) */
+.hm-mega-col-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.hm-mega-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.hm-mega-links li {
+  margin: 6px 0;
+}
+
+.hm-mega-links a {
+  text-decoration: none;
+  display: inline-block;
+  line-height: 1.4;
+}
+
+/* Mobile fallback: panel stays hidden until JS (later) */
+@media (hover: none) and (pointer: coarse) {
+  .hm-has-mega > .hm-mega-panel {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .hm-mega-inner {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
