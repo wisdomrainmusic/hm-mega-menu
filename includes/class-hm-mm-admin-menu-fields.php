@@ -13,6 +13,7 @@ final class HM_MM_Admin_Menu_Fields {
 
     // Save on menu update.
     add_action('wp_update_nav_menu_item', [__CLASS__, 'save_fields'], 10, 3);
+    add_action('save_post_nav_menu_item', [__CLASS__, 'save_fields_post'], 10, 3);
   }
 
   public static function render_fields($item_id, $item, $depth, $args) {
@@ -25,7 +26,7 @@ final class HM_MM_Admin_Menu_Fields {
         <input
           type="checkbox"
           id="hm-mm-enabled-<?php echo esc_attr($item_id); ?>"
-          name="hm_mm_enabled[<?php echo esc_attr($item_id); ?>]"
+          name="menu-item-hm-mm-enabled[<?php echo esc_attr($item_id); ?>]"
           value="1"
           <?php checked($enabled, '1'); ?>
         />
@@ -36,19 +37,39 @@ final class HM_MM_Admin_Menu_Fields {
   }
 
   public static function save_fields($menu_id, $menu_item_db_id, $args) {
-    // Capability check
+    self::persist_enabled_meta($menu_item_db_id);
+  }
+
+  public static function save_fields_post($post_id, $post, $update) {
+    // Only for nav menu items
+    if ( empty($post) || $post->post_type !== 'nav_menu_item' ) {
+      return;
+    }
+
+    self::persist_enabled_meta($post_id);
+  }
+
+  private static function persist_enabled_meta($menu_item_id) {
     if ( ! current_user_can('edit_theme_options') ) {
       return;
     }
 
-    // Checkbox value
     $enabled = '0';
-    if ( isset($_POST['hm_mm_enabled']) && is_array($_POST['hm_mm_enabled']) ) {
-      if ( isset($_POST['hm_mm_enabled'][$menu_item_db_id]) && $_POST['hm_mm_enabled'][$menu_item_db_id] === '1' ) {
+
+    // NEW (WordPress native-ish naming)
+    if ( isset($_POST['menu-item-hm-mm-enabled']) && is_array($_POST['menu-item-hm-mm-enabled']) ) {
+      if ( isset($_POST['menu-item-hm-mm-enabled'][$menu_item_id]) && $_POST['menu-item-hm-mm-enabled'][$menu_item_id] === '1' ) {
         $enabled = '1';
       }
     }
 
-    update_post_meta($menu_item_db_id, self::META_ENABLED, $enabled);
+    // BACKWARD COMPAT (old field name)
+    if ( $enabled === '0' && isset($_POST['hm_mm_enabled']) && is_array($_POST['hm_mm_enabled']) ) {
+      if ( isset($_POST['hm_mm_enabled'][$menu_item_id]) && $_POST['hm_mm_enabled'][$menu_item_id] === '1' ) {
+        $enabled = '1';
+      }
+    }
+
+    update_post_meta($menu_item_id, self::META_ENABLED, $enabled);
   }
 }
