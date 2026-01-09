@@ -1,4 +1,10 @@
 /* HM Mega Menu - scoped styles */
+/* Eğer tema Mağaza altında default sub-menu basıyorsa, mega açıkken gizle */
+.hm-has-mega > .sub-menu {
+  display: none !important;
+}
+
+/* Panel position için li relative kalsın */
 .hm-has-mega {
   position: relative;
 }
