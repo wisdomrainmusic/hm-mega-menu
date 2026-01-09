@@ -31,10 +31,40 @@ final class HM_MM_Loader {
   }
 
   public function inject_walker($args) {
-    // Sadece primary menüde çalışsın istersen burada şart ekleriz
-    if ( empty($args['walker']) ) {
-      $args['walker'] = new HM_MM_Walker();
+
+    // Admin'de asla dokunma
+    if ( is_admin() ) {
+      return $args;
     }
+
+    /**
+     * IMPORTANT:
+     * Mega walker sadece hedef menüde çalışmalı.
+     * Menü adın: "Shop Categories"
+     * (WP menü adıyla birebir aynı olmalı)
+     */
+    $target_menu_name = 'Shop Categories';
+
+    $menu_ok = false;
+
+    // args['menu'] bazen ID/slug/name gelebiliyor
+    if ( isset($args['menu']) ) {
+      if ( is_string($args['menu']) && $args['menu'] === $target_menu_name ) {
+        $menu_ok = true;
+      } elseif ( is_object($args['menu']) && ! empty($args['menu']->name) && $args['menu']->name === $target_menu_name ) {
+        $menu_ok = true;
+      }
+    }
+
+    // theme_location ile geliyorsa, burayı şimdilik kapalı tutuyoruz
+    // (istersen sonra ekleriz)
+    if ( ! $menu_ok ) {
+      return $args;
+    }
+
+    // Sadece hedef menüde walker set et
+    $args['walker'] = new HM_MM_Walker();
+
     return $args;
   }
 
