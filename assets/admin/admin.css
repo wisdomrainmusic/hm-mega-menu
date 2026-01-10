@@ -1,1 +1,127 @@
-/* Admin styles will be added in Commit 3 (Builder UI). */
+.hm-mm-wrap .hm-mm-topbar {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  margin: 14px 0 18px;
+}
+
+.hm-mm-wrap .hm-mm-field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.hm-mm-wrap .hm-mm-field select,
+.hm-mm-wrap .hm-mm-field input[type="text"] {
+  width: 100%;
+  max-width: 520px;
+}
+
+.hm-mm-card {
+  background: #fff;
+  border: 1px solid #dcdcde;
+  border-radius: 10px;
+  padding: 16px;
+  margin: 14px 0;
+}
+
+.hm-mm-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hm-mm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.hm-mm-field--checkbox label {
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hm-mm-help {
+  margin-top: 8px;
+}
+
+.hm-mm-sections {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hm-mm-section {
+  display: grid;
+  grid-template-columns: 34px 1fr 60px;
+  gap: 12px;
+  border: 1px solid #dcdcde;
+  border-radius: 10px;
+  background: #fafafb;
+  padding: 12px;
+}
+
+.hm-mm-section__handle {
+  cursor: grab;
+  user-select: none;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #c3c4c7;
+  border-radius: 8px;
+  background: #fff;
+  min-height: 44px;
+}
+
+.hm-mm-section__body .hm-mm-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.hm-mm-section__body .hm-mm-row:last-child {
+  margin-bottom: 0;
+}
+
+.hm-mm-section__body .hm-mm-row:nth-child(2) {
+  grid-template-columns: 2fr 1fr 1fr;
+}
+
+.hm-mm-section__actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-top: 2px;
+}
+
+.hm-mm-actions {
+  margin-top: 14px;
+}
+
+@media (max-width: 960px) {
+  .hm-mm-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hm-mm-section {
+    grid-template-columns: 34px 1fr;
+  }
+
+  .hm-mm-section__actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .hm-mm-section__body .hm-mm-row,
+  .hm-mm-section__body .hm-mm-row:nth-child(2) {
+    grid-template-columns: 1fr;
+  }
+}
