@@ -81,7 +81,11 @@ final class HM_MM_Plugin {
 	private function define_admin_hooks() {
 		$admin = new HM_MM_Admin( $this->plugin_name, $this->version );
 
+		$this->loader->add_action( 'admin_menu', $admin, 'register_menu' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_assets' );
+		$this->loader->add_action( 'wp_ajax_hm_mm_builder_load', $admin, 'ajax_load' );
+		$this->loader->add_action( 'wp_ajax_hm_mm_builder_save', $admin, 'ajax_save' );
+		$this->loader->add_action( 'wp_ajax_hm_mm_get_menu_items', $admin, 'ajax_get_menu_items' );
 	}
 
 	/**
