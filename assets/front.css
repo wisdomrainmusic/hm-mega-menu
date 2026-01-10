@@ -12,10 +12,14 @@
 /* Panel default hidden */
 .hm-has-mega > .hm-mega-panel {
   position: absolute;
-  left: 0;
-  right: 0;
   top: 100%;
   z-index: 9999;
+
+  /* IMPORTANT: li genişliğine bağlı kalmasın */
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1200px, calc(100vw - 48px));
+  max-width: none;
 
   display: none;
   opacity: 0;
@@ -25,12 +29,13 @@
   border-top: 1px solid rgba(0,0,0,0.06);
   box-shadow: 0 10px 30px rgba(0,0,0,0.10);
 
-  padding: 24px 0;
+  padding: 24px;
 }
 
 /* Open on hover (desktop) */
 @media (hover: hover) and (pointer: fine) {
-  .hm-has-mega:hover > .hm-mega-panel {
+  .hm-has-mega:hover > .hm-mega-panel,
+  .hm-has-mega:focus-within > .hm-mega-panel {
     display: block;
     opacity: 1;
     visibility: visible;
@@ -39,8 +44,8 @@
 
 /* Inner container (keeps content aligned) */
 .hm-has-mega > .hm-mega-panel > .hm-mega-inner {
-  width: min(1200px, calc(100% - 48px));
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
 }
 
 /* Grid baseline */
