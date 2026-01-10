@@ -5,6 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mega-menu-loader.php';
 require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mega-menu-i18n.php';
+require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mega-menu-storage.php';
+require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mega-menu-admin.php';
 
 class HM_Mega_Menu {
 
@@ -38,8 +40,14 @@ class HM_Mega_Menu {
 	}
 
 	private function define_admin_hooks() {
-		// Builder sayfası Commit 3'te gelecek.
-		$this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_admin_assets' );
+		$admin = new HM_Mega_Menu_Admin();
+
+		$this->loader->add_action( 'admin_menu', $admin, 'register_menu' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_assets' );
+		$this->loader->add_action( 'admin_post_hm_mm_save_builder_v2', $admin, 'handle_save' );
+
+		// Register handles (we enqueue conditionally in admin class).
+		$this->loader->add_action( 'admin_enqueue_scripts', $this, 'register_admin_assets' );
 	}
 
 	private function define_public_hooks() {
@@ -51,11 +59,7 @@ class HM_Mega_Menu {
 		$this->loader->run();
 	}
 
-	public function enqueue_admin_assets() {
-		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-
-		// Şimdilik sadece plugin admin sayfaları gelince yükleyeceğiz (Commit 3'te netleşecek).
-		// Burada erken yüklemeyi minimum tutuyoruz.
+	public function register_admin_assets() {
 		wp_register_style(
 			'hm-mm-admin',
 			HM_MM_PLUGIN_URL . 'assets/admin/admin.css',
@@ -70,8 +74,6 @@ class HM_Mega_Menu {
 			$this->version,
 			true
 		);
-
-		// Builder sayfası slug'ı Commit 3'te belli olunca koşullu enqueue yapılacak.
 	}
 
 	public function enqueue_public_assets() {
