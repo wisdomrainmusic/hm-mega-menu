@@ -21,6 +21,11 @@ li.hm-mm-has-mega {
   display: none !important;
   box-sizing: border-box !important;
   margin: 0 !important;
+  /* KEY FIX:
+     Without a bounded height, CSS columns often keep everything in the first column,
+     making the panel extremely tall and leaving empty space on the right. */
+  max-height: calc(100vh - 120px) !important;
+  overflow-y: auto !important;
 }
 
 li.hm-mm-has-mega.hm-mm-open > .hm-mm-panel {
