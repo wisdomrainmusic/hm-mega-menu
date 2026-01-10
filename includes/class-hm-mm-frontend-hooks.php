@@ -10,6 +10,9 @@ final class HM_MM_Frontend_Hooks {
 	public static function init() {
 		add_filter( 'nav_menu_css_class', array( __CLASS__, 'add_menu_item_classes' ), 10, 4 );
 		add_filter( 'walker_nav_menu_start_el', array( __CLASS__, 'inject_mega_panel' ), 10, 4 );
+
+		// IMPORTANT: if mega enabled on an item, remove its children from frontend output
+		add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'remove_children_for_mega_items' ), 20, 2 );
 	}
 
 	public static function add_menu_item_classes( $classes, $item, $args, $depth ) {
@@ -97,5 +100,58 @@ final class HM_MM_Frontend_Hooks {
 		}
 
 		return $html;
+	}
+
+	public static function remove_children_for_mega_items( $items, $args ) {
+		if ( empty( $items ) || ! is_array( $items ) ) {
+			return $items;
+		}
+
+		$mega_parents = array();
+
+		// Find mega-enabled parents
+		foreach ( $items as $it ) {
+			$enabled = get_post_meta( $it->ID, self::META_ENABLED, true );
+			if ( $enabled === '1' ) {
+				$mega_parents[ (int) $it->ID ] = true;
+			}
+		}
+
+		if ( empty( $mega_parents ) ) {
+			return $items;
+		}
+
+		// Remove direct children (and their children) of mega parents
+		$remove = array();
+
+		$changed = true;
+		while ( $changed ) {
+			$changed = false;
+
+			foreach ( $items as $it ) {
+				$pid = (int) $it->menu_item_parent;
+
+				if ( isset( $mega_parents[ $pid ] ) || isset( $remove[ $pid ] ) ) {
+					if ( ! isset( $remove[ (int) $it->ID ] ) ) {
+						$remove[ (int) $it->ID ] = true;
+						$changed = true;
+					}
+				}
+			}
+		}
+
+		if ( empty( $remove ) ) {
+			return $items;
+		}
+
+		$filtered = array();
+		foreach ( $items as $it ) {
+			if ( isset( $remove[ (int) $it->ID ] ) ) {
+				continue;
+			}
+			$filtered[] = $it;
+		}
+
+		return $filtered;
 	}
 }
