@@ -111,7 +111,7 @@
       var headingHtml =
         '<label class="hm-mm-mini-toggle"><input type="checkbox" class="hm-mm-row-heading" ' +
         (heading ? 'checked="checked"' : "") +
-        " /> <span>On</span></label>";
+        " /> <span>Başlık Göster</span></label>";
 
       var tr =
         '<tr class="hm-mm-row" data-row-id="' +
@@ -136,7 +136,7 @@
         "<td>" +
         headingHtml +
         "</td>" +
-        '<td class="hm-mm-actions"><button type="button" class="button-link-delete hm-mm-row-remove">Remove</button></td>' +
+        '<td class="hm-mm-actions"><button type="button" class="button-link-delete hm-mm-row-remove">Sil</button></td>' +
         "</tr>";
 
       $body.append(tr);
@@ -219,11 +219,11 @@
       setStatus("");
       setControlsEnabled(false);
 
-      $("#hm-mm-target-item").html('<option value="">' + escHtml("Loading...") + "</option>");
+      $("#hm-mm-target-item").html('<option value="">' + escHtml(HM_MM_BUILDER.i18n.loading) + "</option>");
 
       if (!menuId) {
         $("#hm-mm-target-item").prop("disabled", true).html(
-          '<option value="">' + escHtml("Select a menu first") + "</option>"
+          '<option value="">' + escHtml(HM_MM_BUILDER.i18n.select_menu_first) + "</option>"
         );
         return;
       }
@@ -236,7 +236,7 @@
           }
           state.items = res.data.items || [];
           $("#hm-mm-target-item").prop("disabled", false).html(
-            '<option value="">' + escHtml("Select a target item") + "</option>" +
+            '<option value="">' + escHtml(HM_MM_BUILDER.i18n.select_target_item) + "</option>" +
               state.items
                 .map(function (it) {
                   var pad = new Array(Math.min(it.depth, 6) + 1).join("— ");
@@ -264,7 +264,7 @@
       }
 
       setControlsEnabled(true);
-      setStatus("Loading...");
+      setStatus(HM_MM_BUILDER.i18n.loading);
 
       loadTarget(targetId)
         .done(function (res) {

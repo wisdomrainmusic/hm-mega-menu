@@ -120,12 +120,16 @@ final class HM_MM_Admin {
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'nonce'    => wp_create_nonce( 'hm_mm_builder_nonce' ),
 				'i18n'     => array(
-					'saving'         => __( 'Saving...', 'hm-mega-menu' ),
-					'saved'          => __( 'Saved.', 'hm-mega-menu' ),
-					'save_failed'    => __( 'Save failed.', 'hm-mega-menu' ),
-					'load_failed'    => __( 'Load failed.', 'hm-mega-menu' ),
-					'choose_menu'    => __( 'Choose a menu first.', 'hm-mega-menu' ),
-					'confirm_remove' => __( 'Remove this row?', 'hm-mega-menu' ),
+					'saving'             => __( 'Kaydediliyor...', 'hm-mega-menu' ),
+					'saved'              => __( 'Kaydedildi.', 'hm-mega-menu' ),
+					'save_failed'        => __( 'Kaydetme başarısız.', 'hm-mega-menu' ),
+					'load_failed'        => __( 'Yükleme başarısız.', 'hm-mega-menu' ),
+					'choose_menu'        => __( 'Önce menü seç.', 'hm-mega-menu' ),
+					'confirm_remove'     => __( 'Bu satırı silmek istiyor musun?', 'hm-mega-menu' ),
+					'select_menu'        => __( 'Menü seç', 'hm-mega-menu' ),
+					'select_menu_first'  => __( 'Önce menü seç', 'hm-mega-menu' ),
+					'select_target_item' => __( 'Hedef öğe seç', 'hm-mega-menu' ),
+					'loading'            => __( 'Yükleniyor...', 'hm-mega-menu' ),
 				),
 			)
 		);
