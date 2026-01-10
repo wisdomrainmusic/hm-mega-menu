@@ -60,8 +60,10 @@ li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
 */
 .hm-mm-panel .hm-mm-sections {
   column-count: 4 !important;
-  column-width: 260px !important;
-  column-gap: 56px !important;
+  /* Keep 4 columns stable even when viewport shrinks slightly (e.g. DevTools open) */
+  column-width: 240px !important;
+  column-gap: 48px !important;
+  column-fill: auto !important;
 }
 
 /* Keep 4 columns on typical desktop widths (even with DevTools open).
