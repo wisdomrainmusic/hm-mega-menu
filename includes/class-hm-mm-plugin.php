@@ -56,6 +56,7 @@ final class HM_MM_Plugin {
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-admin.php';
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-public.php';
 
+		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-menu.php';
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-utils.php';
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-schema.php';
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-storage.php';
