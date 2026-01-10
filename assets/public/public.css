@@ -1,1 +1,113 @@
-/* Commit 1 placeholder */
+/* Base: keep panel non-invasive */
+.hm-mega-panel {
+	display: none;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	top: 100%;
+	width: 100vw;
+	z-index: 9999;
+}
+
+.hm-mega-inner {
+	margin: 0 auto;
+	max-width: 1200px;
+	padding: 18px 16px;
+}
+
+/* Panel appearance */
+.hm-mega-panel {
+	background: #fff;
+	border-top: 1px solid rgba(0, 0, 0, 0.08);
+	box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.hm-mega-row + .hm-mega-row {
+	margin-top: 14px;
+	padding-top: 14px;
+	border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.hm-mega-row-title {
+	font-weight: 700;
+	margin-bottom: 10px;
+}
+
+/* Columns grid */
+.hm-mega-cols {
+	display: grid;
+	gap: 14px;
+}
+
+.hm-mega-cols--1 {
+	grid-template-columns: 1fr;
+}
+
+.hm-mega-cols--2 {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.hm-mega-cols--3 {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.hm-mega-cols--4 {
+	grid-template-columns: repeat(4, 1fr);
+}
+
+.hm-mega-cols--5 {
+	grid-template-columns: repeat(5, 1fr);
+}
+
+.hm-mega-cols--6 {
+	grid-template-columns: repeat(6, 1fr);
+}
+
+.hm-mega-block-title {
+	font-weight: 600;
+	margin-bottom: 8px;
+}
+
+.hm-mega-block-title a {
+	text-decoration: none;
+}
+
+.hm-mega-links,
+.hm-mega-sublinks {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.hm-mega-link + .hm-mega-link {
+	margin-top: 6px;
+}
+
+.hm-mega-link > a,
+.hm-mega-sublink > a {
+	text-decoration: none;
+	display: inline-block;
+	padding: 2px 0;
+}
+
+.hm-mega-sublinks {
+	margin-top: 6px;
+	padding-left: 12px;
+	border-left: 2px solid rgba(0, 0, 0, 0.06);
+}
+
+.hm-mega-sublink + .hm-mega-sublink {
+	margin-top: 4px;
+}
+
+/* Show state */
+.hm-mm-open > .hm-mega-panel {
+	display: block;
+}
+
+/* Desktop only (MVP) */
+@media (max-width: 1024px) {
+	.hm-mega-panel {
+		display: none !important;
+	}
+}

@@ -25,14 +25,14 @@ final class HM_MM_Public {
 	}
 
 	public function enqueue_assets() {
-		wp_register_style(
+		wp_enqueue_style(
 			$this->plugin_name . '-public',
 			HM_MM_PLUGIN_URL . 'assets/public/public.css',
 			array(),
 			$this->version
 		);
 
-		wp_register_script(
+		wp_enqueue_script(
 			$this->plugin_name . '-public',
 			HM_MM_PLUGIN_URL . 'assets/public/public.js',
 			array(),
