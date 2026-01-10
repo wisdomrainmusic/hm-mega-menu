@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Public functionality (MVP: enqueue placeholders only).
+ * Public functionality.
  *
  * @package HM_Mega_Menu
  */
@@ -35,6 +35,9 @@ final class HM_MM_Public {
 	public function __construct( $plugin_name, $version ) {
 		$this->plugin_name = (string) $plugin_name;
 		$this->version     = (string) $version;
+
+		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-render.php';
+		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-walker.php';
 	}
 
 	/**
@@ -57,5 +60,27 @@ final class HM_MM_Public {
 			$this->version,
 			true
 		);
+	}
+
+	/**
+	 * Hook: set our walker on frontend (only when theme didn't set a custom walker).
+	 *
+	 * This does not alter menu items; it only affects output generation.
+	 *
+	 * @param array $args wp_nav_menu args.
+	 * @return array
+	 */
+	public function filter_nav_menu_args( $args ) {
+		if ( is_admin() ) {
+			return $args;
+		}
+
+		// If a theme/plugin already provided a custom walker, respect it for MVP.
+		if ( isset( $args['walker'] ) && $args['walker'] instanceof Walker ) {
+			return $args;
+		}
+
+		$args['walker'] = new HM_MM_Walker();
+		return $args;
 	}
 }
