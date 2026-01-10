@@ -5,68 +5,36 @@ if ( ! defined('ABSPATH') ) {
 
 class HM_MM_Walker extends Walker_Nav_Menu {
 
-  public function start_lvl( &$output, $depth = 0, $args = null ) {
-    // Normal submenu'leri kapatıyoruz
-    return;
-  }
-
   public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
+    // Let core build normal markup.
+    parent::start_el( $output, $item, $depth, $args, $id );
 
-    $enabled = get_post_meta($item->ID, '_hm_mm_enabled', true);
-
-    $classes = empty($item->classes) ? [] : (array) $item->classes;
-    if ($enabled === '1') {
-      $classes[] = 'hm-has-mega';
+    $enabled = get_post_meta( $item->ID, '_hm_mm_enabled', true );
+    if ( $enabled !== '1' ) {
+      return;
     }
 
-    $class_names = implode(' ', array_map('esc_attr', $classes));
+    // Mirror the same settings as Frontend_Hooks injection.
+    $cols = (int) get_post_meta( $item->ID, '_hm_mm_cols', true );
+    $cols = $cols ? $cols : 4;
 
-    $output .= '<li class="' . $class_names . '">';
+    $parent = (int) get_post_meta( $item->ID, '_hm_mm_parent_cat', true );
+    $depthn = (int) get_post_meta( $item->ID, '_hm_mm_depth', true );
+    $depthn = $depthn ? $depthn : 2;
 
-    $atts  = ! empty($item->url) ? ' href="' . esc_url($item->url) . '"' : '';
-    $title = esc_html($item->title);
+    $limit = (int) get_post_meta( $item->ID, '_hm_mm_limit', true );
+    $limit = $limit ? $limit : 24;
 
-    $output .= '<a' . $atts . '>' . $title . '</a>';
+    // Use the same renderer to avoid divergence.
+    require_once HM_MM_PATH . 'includes/class-hm-mm-frontend-hooks.php';
+    $content = HM_MM_Frontend_Hooks::render_woo_columns( $parent, $cols, $depthn, $limit );
 
-    if ($enabled === '1') {
-      $output .= '
-        <div class="hm-mega-panel">
-          <div class="hm-mega-inner">
-            <div>
-              <h4 class="hm-mega-col-title">Demo Column 1</h4>
-              <ul class="hm-mega-links">
-                <li><a href="#">Link 1</a></li>
-                <li><a href="#">Link 2</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="hm-mega-col-title">Demo Column 2</h4>
-              <ul class="hm-mega-links">
-                <li><a href="#">Link 3</a></li>
-                <li><a href="#">Link 4</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="hm-mega-col-title">Demo Column 3</h4>
-              <ul class="hm-mega-links">
-                <li><a href="#">Link 5</a></li>
-                <li><a href="#">Link 6</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="hm-mega-col-title">Demo Column 4</h4>
-              <ul class="hm-mega-links">
-                <li><a href="#">Link 7</a></li>
-                <li><a href="#">Link 8</a></li>
-              </ul>
-            </div>
-          </div>
+    $output .= '
+      <div class="hm-mega-panel" aria-hidden="true">
+        <div class="hm-mega-inner" style="grid-template-columns: repeat(' . (int) $cols . ', minmax(0, 1fr));">
+          ' . $content . '
         </div>
-      ';
-    }
-  }
-
-  public function end_el( &$output, $item, $depth = 0, $args = null ) {
-    $output .= '</li>';
+      </div>
+    ';
   }
 }

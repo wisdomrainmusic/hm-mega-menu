@@ -8,11 +8,61 @@ final class HM_MM_Frontend_Hooks {
 	const META_ENABLED = '_hm_mm_enabled';
 
 	public static function init() {
+		add_filter( 'wp_nav_menu_args', array( __CLASS__, 'maybe_force_walker' ), 20, 1 );
 		add_filter( 'nav_menu_css_class', array( __CLASS__, 'add_menu_item_classes' ), 10, 4 );
 		add_filter( 'walker_nav_menu_start_el', array( __CLASS__, 'inject_mega_panel' ), 10, 4 );
 
 		// IMPORTANT: if mega enabled on an item, remove its children from frontend output
 		add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'remove_children_for_mega_items' ), 20, 2 );
+	}
+
+	/**
+	 * Some themes/header builders bypass or short-circuit walker_nav_menu_start_el injection.
+	 * As a fallback, force our Walker only when this menu contains at least one mega-enabled item.
+	 */
+	public static function maybe_force_walker( $args ) {
+		$menu_obj = null;
+
+		// If a menu is explicitly provided.
+		if ( ! empty( $args['menu'] ) ) {
+			$menu_obj = wp_get_nav_menu_object( $args['menu'] );
+		}
+
+		// If a theme_location is used, resolve the assigned menu.
+		if ( ! $menu_obj && ! empty( $args['theme_location'] ) ) {
+			$locations = get_nav_menu_locations();
+			if ( ! empty( $locations[ $args['theme_location'] ] ) ) {
+				$menu_obj = wp_get_nav_menu_object( (int) $locations[ $args['theme_location'] ] );
+			}
+		}
+
+		if ( ! $menu_obj || empty( $menu_obj->term_id ) ) {
+			return $args;
+		}
+
+		$items = wp_get_nav_menu_items( (int) $menu_obj->term_id );
+		if ( empty( $items ) || ! is_array( $items ) ) {
+			return $args;
+		}
+
+		$has_mega = false;
+		foreach ( $items as $it ) {
+			$enabled = get_post_meta( $it->ID, self::META_ENABLED, true );
+			if ( $enabled === '1' ) {
+				$has_mega = true;
+				break;
+			}
+		}
+
+		if ( ! $has_mega ) {
+			return $args;
+		}
+
+		// Force HM walker only for this menu render.
+		require_once HM_MM_PATH . 'includes/class-hm-mm-walker.php';
+		$args['walker'] = new HM_MM_Walker();
+
+		return $args;
 	}
 
 	public static function add_menu_item_classes( $classes, $item, $args, $depth ) {
@@ -54,7 +104,7 @@ final class HM_MM_Frontend_Hooks {
 		return $item_output . $panel;
 	}
 
-	private static function render_woo_columns( $parent_term_id, $cols, $depth, $limit ) {
+	public static function render_woo_columns( $parent_term_id, $cols, $depth, $limit ) {
 		if ( ! taxonomy_exists( 'product_cat' ) ) {
 			return '<div class="hm-mega-col"><p>WooCommerce categories not found.</p></div>';
 		}
