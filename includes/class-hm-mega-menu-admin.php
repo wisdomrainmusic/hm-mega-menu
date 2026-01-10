@@ -46,8 +46,6 @@ class HM_Mega_Menu_Admin {
 		wp_enqueue_style( 'hm-mm-admin' );
 		wp_enqueue_script( 'hm-mm-admin' );
 
-		wp_enqueue_script( 'jquery-ui-sortable' );
-
 		wp_localize_script(
 			'hm-mm-admin',
 			'HM_MM_ADMIN',
