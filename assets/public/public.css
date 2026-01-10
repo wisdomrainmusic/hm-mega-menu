@@ -111,3 +111,100 @@
 		display: none !important;
 	}
 }
+
+/* -------------------------------------------------
+   Layout & spacing fixes (Astra-safe isolation)
+-------------------------------------------------- */
+
+/* Reset theme menu styles inside mega panel */
+.hm-mega-panel,
+.hm-mega-panel * {
+	box-sizing: border-box;
+}
+
+.hm-mega-panel ul,
+.hm-mega-panel li {
+	margin: 0 !important;
+	padding: 0 !important;
+	list-style: none !important;
+}
+
+.hm-mega-panel a {
+	padding: 0 !important;
+	margin: 0 !important;
+	line-height: 1.35 !important;
+	display: inline-block;
+	text-decoration: none;
+}
+
+/* If theme forces big spacing on li/a */
+.hm-mega-panel .hm-mega-link,
+.hm-mega-panel .hm-mega-sublink {
+	line-height: 1.35 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+/* Row wrapper: make rows behave like columns (auto-fit) */
+.hm-mega-rows {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 28px;
+	align-items: start;
+}
+
+/* Rows no longer "stack with big separators" */
+.hm-mega-row + .hm-mega-row {
+	margin-top: 0;
+	padding-top: 0;
+	border-top: 0;
+}
+
+/* Keep row title compact */
+.hm-mega-row-title {
+	margin: 0 0 10px 0;
+	font-size: 16px;
+	line-height: 1.2;
+}
+
+/* Inside a row: columns grid should be top-aligned */
+.hm-mega-cols {
+	align-items: start;
+	gap: 18px;
+}
+
+/* Blocks: compact */
+.hm-mega-block {
+	margin: 0 0 14px 0;
+}
+
+.hm-mega-block-title {
+	margin: 0 0 6px 0;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+/* Links: compact vertical rhythm */
+.hm-mega-links {
+	margin: 0;
+	padding: 0;
+}
+
+.hm-mega-link + .hm-mega-link {
+	margin-top: 4px;
+}
+
+.hm-mega-sublinks {
+	margin-top: 4px;
+	padding-left: 10px;
+	border-left: 2px solid rgba(0, 0, 0, 0.06);
+}
+
+.hm-mega-sublink + .hm-mega-sublink {
+	margin-top: 3px;
+}
+
+/* Optional: reduce overall inner padding a bit */
+.hm-mega-inner {
+	padding: 16px 14px;
+}

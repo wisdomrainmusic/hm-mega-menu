@@ -36,9 +36,11 @@ final class HM_MM_Render {
 						<?php echo esc_html__( 'Mega menu enabled, but no rows configured yet.', 'hm-mega-menu' ); ?>
 					</div>
 				<?php else : ?>
-					<?php foreach ( $rows as $row ) : ?>
-						<?php echo self::render_row( $row, $by_parent ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-					<?php endforeach; ?>
+					<div class="hm-mega-rows">
+						<?php foreach ( $rows as $row ) : ?>
+							<?php echo self::render_row( $row, $by_parent ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+						<?php endforeach; ?>
+					</div>
 				<?php endif; ?>
 			</div>
 		</div>
