@@ -78,7 +78,7 @@ class HM_Mega_Menu {
 		wp_register_script(
 			'hm-mm-admin',
 			HM_MM_PLUGIN_URL . 'assets/admin/admin.js',
-			array( 'jquery' ),
+			array(),
 			$this->version,
 			true
 		);
