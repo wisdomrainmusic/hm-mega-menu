@@ -7,6 +7,7 @@ require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mega-menu-loader.php';
 require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mega-menu-i18n.php';
 require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mega-menu-storage.php';
 require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mega-menu-admin.php';
+require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mega-menu-public.php';
 
 class HM_Mega_Menu {
 
@@ -51,8 +52,17 @@ class HM_Mega_Menu {
 	}
 
 	private function define_public_hooks() {
-		// Frontend injection + walker Commit 4'te gelecek.
-		$this->loader->add_action( 'wp_enqueue_scripts', $this, 'enqueue_public_assets' );
+		$public = new HM_Mega_Menu_Public();
+
+		// Register handles (already in Commit 1/3 pattern).
+		$this->loader->add_action( 'wp_enqueue_scripts', $this, 'register_public_assets' );
+
+		// Enqueue only if enabled configs exist.
+		$this->loader->add_action( 'wp_enqueue_scripts', $public, 'maybe_enqueue_assets' );
+
+		// Output-only integration: add class + inject panel via filters.
+		$this->loader->add_filter( 'nav_menu_css_class', $public, 'filter_nav_menu_css_class', 20, 4 );
+		$this->loader->add_filter( 'walker_nav_menu_start_el', $public, 'filter_start_el_inject_panel', 20, 4 );
 	}
 
 	public function run() {
@@ -76,7 +86,7 @@ class HM_Mega_Menu {
 		);
 	}
 
-	public function enqueue_public_assets() {
+	public function register_public_assets() {
 		wp_register_style(
 			'hm-mm-public',
 			HM_MM_PLUGIN_URL . 'assets/public/public.css',
@@ -91,7 +101,5 @@ class HM_Mega_Menu {
 			$this->version,
 			true
 		);
-
-		// Commit 4/6: mega aktif olduğunda enqueue edeceğiz (şimdilik register).
 	}
 }

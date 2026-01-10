@@ -1,1 +1,162 @@
-/* Public styles will be added in Commit 6 (Astra-safe CSS + compact spacing). */
+/* =========================
+   HM Mega Menu v2 - Public
+   Contract: Sections grid + section columns
+   Astra-safe: hide default submenu when mega open
+   Compact spacing reset inside panel
+   ========================= */
+
+/* Ensure LI can anchor the absolute panel */
+li.hm-mm-has-mega {
+  position: relative !important;
+}
+
+/* Panel base */
+.hm-mm-panel {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  top: 100% !important;
+  width: 100vw !important;
+  z-index: 99999 !important;
+  display: none !important;
+  box-sizing: border-box !important;
+}
+
+li.hm-mm-has-mega.hm-mm-open > .hm-mm-panel {
+  display: block !important;
+}
+
+/* CRITICAL: hide Astra's own submenu only when mega open */
+li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Panel inner container */
+.hm-mm-panel .hm-mm-inner {
+  box-sizing: border-box !important;
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  padding: 18px 22px !important;
+  background: #ffffff !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.14) !important;
+}
+
+/* ===== Layout Contract A: Sections Grid ===== */
+.hm-mm-panel .hm-mm-sections {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+  gap: 28px !important;
+  align-items: start !important;
+}
+
+/* Section block */
+.hm-mm-panel .hm-mm-section {
+  min-width: 0 !important;
+}
+
+.hm-mm-panel .hm-mm-section__title {
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  line-height: 1.25 !important;
+  margin: 0 0 10px 0 !important;
+}
+
+/* ===== Layout Contract B: Inside Section Columns ===== */
+.hm-mm-panel .hm-mm-section__cols {
+  display: grid !important;
+  grid-template-columns: repeat(var(--hm-mm-cols), minmax(0, 1fr)) !important;
+  gap: 18px !important;
+  align-items: start !important;
+}
+
+.hm-mm-panel .hm-mm-col {
+  min-width: 0 !important;
+}
+
+/* ===== Compact reset inside panel ===== */
+.hm-mm-panel .hm-mm-inner ul,
+.hm-mm-panel .hm-mm-inner ol {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.hm-mm-panel .hm-mm-inner li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.hm-mm-panel .hm-mm-inner a {
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1.35 !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+
+/* Block */
+.hm-mm-panel .hm-mm-block {
+  margin: 0 0 12px 0 !important;
+}
+
+.hm-mm-panel .hm-mm-block:last-child {
+  margin-bottom: 0 !important;
+}
+
+.hm-mm-panel .hm-mm-block__title {
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  line-height: 1.25 !important;
+  margin: 0 0 8px 0 !important;
+}
+
+.hm-mm-panel .hm-mm-block__title a,
+.hm-mm-panel .hm-mm-block__title span {
+  display: inline-block !important;
+}
+
+/* Level 2 links */
+.hm-mm-panel .hm-mm-links {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+.hm-mm-panel .hm-mm-link > a,
+.hm-mm-panel .hm-mm-link > span {
+  font-size: 13px !important;
+  display: inline-block !important;
+}
+
+/* Level 3 links */
+.hm-mm-panel .hm-mm-sublinks {
+  margin-top: 6px !important;
+  padding-left: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+}
+
+.hm-mm-panel .hm-mm-sublink > a,
+.hm-mm-panel .hm-mm-sublink > span {
+  font-size: 12.5px !important;
+  opacity: 0.92 !important;
+  display: inline-block !important;
+}
+
+/* Hover polish */
+.hm-mm-panel .hm-mm-inner a:hover {
+  text-decoration: underline !important;
+}
+
+/* Desktop-only: keep panel usable; Mobile disabled in JS too */
+@media (max-width: 1024px) {
+  li.hm-mm-has-mega > .hm-mm-panel {
+    display: none !important;
+  }
+}
