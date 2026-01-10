@@ -208,3 +208,91 @@
 .hm-mega-inner {
 	padding: 16px 14px;
 }
+
+/* =================================================
+   Astra override – force grid + compact spacing
+   ================================================= */
+
+/* Stronger isolation: override theme submenu rules */
+.hm-mega-panel .hm-mega-inner,
+.hm-mega-panel .hm-mega-inner * {
+	box-sizing: border-box;
+}
+
+/* Force our row/cols layout */
+.hm-mega-panel .hm-mega-inner .hm-mega-rows {
+	display: grid !important;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+	gap: 28px !important;
+	align-items: start !important;
+}
+
+/* Kill row separators that make it look like a long vertical list */
+.hm-mega-panel .hm-mega-inner .hm-mega-row + .hm-mega-row {
+	margin-top: 0 !important;
+	padding-top: 0 !important;
+	border-top: 0 !important;
+}
+
+/* FORCE columns grid (this is the main fix) */
+.hm-mega-panel .hm-mega-inner .hm-mega-cols {
+	display: grid !important;
+	gap: 18px !important;
+	align-items: start !important;
+}
+
+/* Lock templates with minmax(0,1fr) to prevent overflow issues */
+.hm-mega-panel .hm-mega-inner .hm-mega-cols--1 { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+.hm-mega-panel .hm-mega-inner .hm-mega-cols--2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.hm-mega-panel .hm-mega-inner .hm-mega-cols--3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+.hm-mega-panel .hm-mega-inner .hm-mega-cols--4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+.hm-mega-panel .hm-mega-inner .hm-mega-cols--5 { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+.hm-mega-panel .hm-mega-inner .hm-mega-cols--6 { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
+
+.hm-mega-panel .hm-mega-inner .hm-mega-col {
+	min-width: 0 !important;
+}
+
+/* HARD reset theme menu spacing inside panel */
+.hm-mega-panel .hm-mega-inner ul,
+.hm-mega-panel .hm-mega-inner li {
+	margin: 0 !important;
+	padding: 0 !important;
+	list-style: none !important;
+}
+
+/* Astra often sets submenu a padding/line-height with !important */
+.hm-mega-panel .hm-mega-inner a,
+.hm-mega-panel .hm-mega-inner a:link,
+.hm-mega-panel .hm-mega-inner a:visited {
+	padding: 0 !important;
+	margin: 0 !important;
+	line-height: 1.35 !important;
+	text-decoration: none !important;
+	display: inline-block !important;
+}
+
+/* Compact vertical rhythm */
+.hm-mega-panel .hm-mega-inner .hm-mega-block {
+	margin: 0 0 14px 0 !important;
+}
+
+.hm-mega-panel .hm-mega-inner .hm-mega-block-title {
+	margin: 0 0 6px 0 !important;
+	font-weight: 700 !important;
+	line-height: 1.2 !important;
+}
+
+.hm-mega-panel .hm-mega-inner .hm-mega-links .hm-mega-link + .hm-mega-link {
+	margin-top: 4px !important;
+}
+
+.hm-mega-panel .hm-mega-inner .hm-mega-sublinks {
+	margin-top: 4px !important;
+	padding-left: 10px !important;
+	border-left: 2px solid rgba(0,0,0,0.06) !important;
+}
+
+.hm-mega-panel .hm-mega-inner .hm-mega-sublink + .hm-mega-sublink {
+	margin-top: 3px !important;
+}
