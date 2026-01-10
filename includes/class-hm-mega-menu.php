@@ -67,7 +67,7 @@ class HM_Mega_Menu {
 		$this->loader->run();
 	}
 
-	public function register_admin_assets() {
+	public function register_admin_assets( $hook_suffix = '' ) {
 		wp_register_style(
 			'hm-mm-admin',
 			HM_MM_PLUGIN_URL . 'assets/admin/admin.css',
