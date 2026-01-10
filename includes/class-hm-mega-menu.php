@@ -44,11 +44,9 @@ class HM_Mega_Menu {
 		$admin = new HM_Mega_Menu_Admin();
 
 		$this->loader->add_action( 'admin_menu', $admin, 'register_menu' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_assets' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $this, 'register_admin_assets', 5, 1 );
+		$this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_assets', 20, 1 );
 		$this->loader->add_action( 'admin_post_hm_mm_save_builder_v2', $admin, 'handle_save' );
-
-		// Register handles (we enqueue conditionally in admin class).
-		$this->loader->add_action( 'admin_enqueue_scripts', $this, 'register_admin_assets' );
 	}
 
 	private function define_public_hooks() {

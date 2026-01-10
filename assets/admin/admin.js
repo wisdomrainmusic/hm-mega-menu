@@ -32,7 +32,7 @@
     if (!tpl) return;
 
     var index = $wrap.find(".hm-mm-section").length;
-    tpl = tpl.replaceAll("__INDEX__", String(index));
+    tpl = tpl.split("__INDEX__").join(String(index));
 
     var $node = $(tpl);
     $wrap.append($node);
