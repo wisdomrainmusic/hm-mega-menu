@@ -188,3 +188,21 @@ li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
   margin:0 !important;
   padding:0 !important;
 }
+
+
+/* Ensure mega panel is not clipped by theme menu containers */
+li.hm-mm-has-mega,
+li.hm-mm-has-mega.hm-mm-open{
+  overflow: visible !important;
+}
+
+.hm-mm-panel{
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* Make section titles darker (not theme link color) */
+.hm-mm-panel .hm-mm-section__title{
+  color:#111 !important;
+}

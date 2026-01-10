@@ -125,7 +125,11 @@ class HM_Mega_Menu_Public {
 
 		ob_start();
 		?>
-		<div class="hm-mm-panel" data-hm-mm-menu="<?php echo esc_attr( $menu_id ); ?>" data-hm-mm-target="<?php echo esc_attr( $target_item_id ); ?>" aria-hidden="true">
+		<div class="hm-mm-panel"
+			data-hm-mm-menu="<?php echo esc_attr( $menu_id ); ?>"
+			data-sec-count="<?php echo esc_attr( (string) ( isset( $cfg['sections'] ) && is_array( $cfg['sections'] ) ? count( $cfg['sections'] ) : 0 ) ); ?>"
+			data-hm-mm-target="<?php echo esc_attr( $target_item_id ); ?>"
+			aria-hidden="true">
 			<div class="hm-mm-inner">
 				<div class="hm-mm-sections">
 					<?php echo $sections_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
