@@ -24,6 +24,15 @@ class HM_Mega_Menu_Renderer {
 			return '';
 		}
 
+		usort(
+			$sections,
+			function ( $left, $right ) {
+				$left_order  = isset( $left['order'] ) ? (int) $left['order'] : 0;
+				$right_order = isset( $right['order'] ) ? (int) $right['order'] : 0;
+				return $left_order <=> $right_order;
+			}
+		);
+
 		$items = wp_get_nav_menu_items( $menu_id );
 		if ( ! is_array( $items ) ) {
 			$items = array();
