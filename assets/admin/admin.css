@@ -1,1 +1,85 @@
-/* Commit 1 placeholder */
+.hm-mm-wrap .hm-mm-card {
+  background: #fff;
+  border: 1px solid #dcdcde;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.hm-mm-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.hm-mm-label {
+  font-weight: 600;
+}
+
+.hm-mm-select {
+  min-width: 240px;
+}
+
+.hm-mm-toggle {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.hm-mm-status {
+  margin-left: 8px;
+  font-size: 13px;
+  color: #1d2327;
+}
+
+.hm-mm-status.is-error {
+  color: #b32d2e;
+}
+
+.hm-mm-builder-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 6px 0 10px;
+}
+
+.hm-mm-table input[type="text"] {
+  width: 100%;
+}
+
+.hm-mm-col-drag {
+  width: 26px;
+}
+
+.hm-mm-col-actions {
+  width: 80px;
+}
+
+.hm-mm-drag {
+  text-align: center;
+}
+
+.hm-mm-handle {
+  cursor: grab;
+  font-size: 16px;
+  user-select: none;
+}
+
+.hm-mm-actions {
+  text-align: right;
+}
+
+.hm-mm-mini-toggle {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.hm-mm-empty td {
+  text-align: center;
+  color: #646970;
+}
+
+.hm-mm-note {
+  margin-top: 10px;
+}
