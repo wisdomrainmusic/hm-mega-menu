@@ -83,3 +83,62 @@
 .hm-mm-note {
   margin-top: 10px;
 }
+
+/* --- Builder table layout fix (prevent WP responsive stacking) --- */
+.hm-mm-table {
+  table-layout: auto !important;
+}
+
+.hm-mm-table td,
+.hm-mm-table th {
+  vertical-align: top;
+}
+
+/* Ensure each cell keeps enough width to stay in one row on desktop */
+.hm-mm-table th:nth-child(2),
+.hm-mm-table td:nth-child(2) {
+  min-width: 220px;
+} /* Title */
+.hm-mm-table th:nth-child(3),
+.hm-mm-table td:nth-child(3) {
+  min-width: 140px;
+} /* Source Type */
+.hm-mm-table th:nth-child(4),
+.hm-mm-table td:nth-child(4) {
+  min-width: 280px;
+} /* Source (Menu Item) */
+.hm-mm-table th:nth-child(5),
+.hm-mm-table td:nth-child(5) {
+  width: 110px;
+  min-width: 110px;
+} /* Columns */
+.hm-mm-table th:nth-child(6),
+.hm-mm-table td:nth-child(6) {
+  width: 110px;
+  min-width: 110px;
+} /* Depth */
+.hm-mm-table th:nth-child(7),
+.hm-mm-table td:nth-child(7) {
+  min-width: 160px;
+} /* Heading */
+.hm-mm-table th:nth-child(8),
+.hm-mm-table td:nth-child(8) {
+  width: 90px;
+  min-width: 90px;
+} /* Actions */
+
+.hm-mm-table select,
+.hm-mm-table input[type="text"] {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Keep row visually compact */
+.hm-mm-table .hm-mm-mini-toggle {
+  white-space: nowrap;
+}
+
+.hm-mm-legend {
+  margin-top: 10px;
+  font-size: 13px;
+}
