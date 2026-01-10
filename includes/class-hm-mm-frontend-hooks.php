@@ -119,14 +119,22 @@ final class HM_MM_Frontend_Hooks {
 			return '<div class="hm-mega-col"><p>Select a parent category in menu settings.</p></div>';
 		}
 
+		$depth = (int) $depth;
+		if ( $depth < 1 ) {
+			$depth = 1;
+		}
+		if ( $depth > 3 ) {
+			$depth = 3;
+		}
+
 		$children = get_terms(
 			array(
-				'taxonomy' => 'product_cat',
+				'taxonomy'   => 'product_cat',
 				'hide_empty' => false,
-				'parent' => $parent_term_id,
-				'orderby' => 'name',
-				'order' => 'ASC',
-				'number' => $limit,
+				'parent'     => $parent_term_id,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+				'number'     => $limit, // top blocks limited
 			)
 		);
 
@@ -134,27 +142,90 @@ final class HM_MM_Frontend_Hooks {
 			return '<div class="hm-mega-col"><p>No subcategories found.</p></div>';
 		}
 
-		$chunks = array_chunk( $children, (int) ceil( count( $children ) / max( 1, $cols ) ) );
-
-		$html = '';
-		for ( $i = 0; $i < $cols; $i++ ) {
-			$chunk = isset( $chunks[ $i ] ) ? $chunks[ $i ] : array();
-
-			$html .= '<div class="hm-mega-col">';
-			$html .= '<ul class="hm-mega-links">';
-
-			foreach ( $chunk as $term ) {
-				$url = get_term_link( $term );
-				if ( is_wp_error( $url ) ) {
-					continue;
-				}
-				$html .= '<li><a href="' . esc_url( $url ) . '">' . esc_html( $term->name ) . '</a></li>';
-			}
-
-			$html .= '</ul>';
-			$html .= '</div>';
+		$blocks = array();
+		foreach ( $children as $child ) {
+			$blocks[] = self::render_category_block( $child, $depth, $limit );
 		}
 
+		$cols = max( 1, (int) $cols );
+		$col_html = array_fill( 0, $cols, '' );
+		$idx = 0;
+		foreach ( $blocks as $block_html ) {
+			$col_html[ $idx ] .= $block_html;
+			$idx++;
+			if ( $idx >= $cols ) {
+				$idx = 0;
+			}
+		}
+
+		$out = '';
+		for ( $i = 0; $i < $cols; $i++ ) {
+			$out .= '<div class="hm-mega-col">' . $col_html[ $i ] . '</div>';
+		}
+		return $out;
+	}
+
+	private static function render_category_block( $term, $depth, $limit ) {
+		$url = get_term_link( $term );
+		if ( is_wp_error( $url ) ) {
+			return '';
+		}
+
+		$html  = '<div class="hm-mega-block">';
+		$html .= '<div class="hm-mega-block-title"><a href="' . esc_url( $url ) . '">' . esc_html( $term->name ) . '</a></div>';
+
+		if ( $depth >= 2 ) {
+			$kids = get_terms(
+				array(
+					'taxonomy'   => 'product_cat',
+					'hide_empty' => false,
+					'parent'     => (int) $term->term_id,
+					'orderby'    => 'name',
+					'order'      => 'ASC',
+					'number'     => $limit,
+				)
+			);
+
+			if ( ! is_wp_error( $kids ) && ! empty( $kids ) ) {
+				$html .= '<ul class="hm-mega-links">';
+				foreach ( $kids as $kid ) {
+					$kid_url = get_term_link( $kid );
+					if ( is_wp_error( $kid_url ) ) {
+						continue;
+					}
+					$html .= '<li><a href="' . esc_url( $kid_url ) . '">' . esc_html( $kid->name ) . '</a>';
+
+					if ( $depth >= 3 ) {
+						$gkids = get_terms(
+							array(
+								'taxonomy'   => 'product_cat',
+								'hide_empty' => false,
+								'parent'     => (int) $kid->term_id,
+								'orderby'    => 'name',
+								'order'      => 'ASC',
+								'number'     => $limit,
+							)
+						);
+						if ( ! is_wp_error( $gkids ) && ! empty( $gkids ) ) {
+							$html .= '<ul class="hm-mega-links hm-mega-links--sub">';
+							foreach ( $gkids as $g ) {
+								$gurl = get_term_link( $g );
+								if ( is_wp_error( $gurl ) ) {
+									continue;
+								}
+								$html .= '<li><a href="' . esc_url( $gurl ) . '">' . esc_html( $g->name ) . '</a></li>';
+							}
+							$html .= '</ul>';
+						}
+					}
+
+					$html .= '</li>';
+				}
+				$html .= '</ul>';
+			}
+		}
+
+		$html .= '</div>';
 		return $html;
 	}
 
