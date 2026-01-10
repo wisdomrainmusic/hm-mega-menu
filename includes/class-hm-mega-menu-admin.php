@@ -45,6 +45,7 @@ class HM_Mega_Menu_Admin {
 
 		wp_enqueue_style( 'hm-mm-admin' );
 		wp_enqueue_script( 'hm-mm-admin' );
+		wp_enqueue_script( 'jquery-ui-sortable' );
 
 		wp_localize_script(
 			'hm-mm-admin',
@@ -225,11 +226,18 @@ class HM_Mega_Menu_Admin {
 		$row_id     = $is_template ? '__INDEX__' : $index_attr;
 
 		?>
-		<div class="hm-mm-section" data-index="<?php echo $index_attr; ?>">
-			<div class="hm-mm-section__handle" title="<?php echo esc_attr__( 'Sürükle-bırak ile sırala', 'hm-mega-menu' ); ?>">≡</div>
+		<?php
+		$order_value = isset( $section['order'] ) ? (int) $section['order'] : 0;
+		if ( $order_value < 1 && is_numeric( $index ) ) {
+			$order_value = (int) $index + 1;
+		}
+		?>
+		<div class="hm-mm-section" data-index="<?php echo $index_attr; ?>" data-sec-id="<?php echo esc_attr( $section['id'] ); ?>">
+			<div class="hm-mm-handle" title="<?php echo esc_attr__( 'Sürükle-bırak ile sırala', 'hm-mega-menu' ); ?>">≡</div>
 
 			<div class="hm-mm-section__body">
 				<input type="hidden" name="sections[<?php echo $row_id; ?>][id]" value="<?php echo esc_attr( $section['id'] ); ?>" />
+				<input type="hidden" class="hm-mm-sec-order" name="sections[<?php echo $row_id; ?>][order]" value="<?php echo esc_attr( (string) $order_value ); ?>" />
 
 				<div class="hm-mm-row">
 					<div class="hm-mm-field">
@@ -311,12 +319,34 @@ class HM_Mega_Menu_Admin {
 		}
 
 		$sections = array();
-		foreach ( $sections_raw as $sec ) {
+		foreach ( $sections_raw as $idx => $sec ) {
 			$norm = HM_Mega_Menu_Storage::normalize_section( is_array( $sec ) ? $sec : array() );
 			if ( $norm ) {
+				$norm['_sort_index'] = (int) $idx;
 				$sections[] = $norm;
 			}
 		}
+
+		usort(
+			$sections,
+			function ( $left, $right ) {
+				$left_order  = isset( $left['order'] ) ? (int) $left['order'] : 0;
+				$right_order = isset( $right['order'] ) ? (int) $right['order'] : 0;
+
+				if ( $left_order === $right_order ) {
+					$left_idx  = isset( $left['_sort_index'] ) ? (int) $left['_sort_index'] : 0;
+					$right_idx = isset( $right['_sort_index'] ) ? (int) $right['_sort_index'] : 0;
+					return $left_idx <=> $right_idx;
+				}
+
+				return $left_order <=> $right_order;
+			}
+		);
+
+		foreach ( $sections as &$section ) {
+			unset( $section['_sort_index'] );
+		}
+		unset( $section );
 
 		$config = array(
 			'enabled'        => $enabled,

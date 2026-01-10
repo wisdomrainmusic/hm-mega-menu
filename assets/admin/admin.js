@@ -39,6 +39,31 @@
     });
   }
 
+  function updateSectionOrder(wrap) {
+    var sections = qsa(".hm-mm-section", wrap);
+    sections.forEach(function (sec, i) {
+      var orderInput = qs(".hm-mm-sec-order", sec);
+      if (orderInput) {
+        orderInput.value = String(i + 1);
+      }
+    });
+  }
+
+  function initSortable(wrap) {
+    if (!window.jQuery || !window.jQuery.fn || !window.jQuery.fn.sortable) {
+      log("jQuery UI sortable missing");
+      return;
+    }
+
+    window.jQuery(wrap).sortable({
+      handle: ".hm-mm-handle",
+      update: function () {
+        reindexSections(wrap);
+        updateSectionOrder(wrap);
+      }
+    });
+  }
+
   function addSection(wrap) {
     var tplEl = qs("#hm-mm-section-template");
     if (!tplEl) {
@@ -70,6 +95,7 @@
 
     wrap.appendChild(node);
     reindexSections(wrap);
+    updateSectionOrder(wrap);
 
     var count = qsa(".hm-mm-section", wrap).length;
     setStatus("Click OK → section added (total: " + count + ")", true);
@@ -93,6 +119,7 @@
       if (sec && sec.parentNode) {
         sec.parentNode.removeChild(sec);
         reindexSections(wrap);
+        updateSectionOrder(wrap);
       }
     });
   }
@@ -109,6 +136,7 @@
     }
 
     bindRemove(wrap);
+    initSortable(wrap);
 
     // Bind add button (direct + delegated) for maximum reliability.
     var addBtn = qs("#hm-mm-add-section");
@@ -136,6 +164,7 @@
     });
 
     reindexSections(wrap);
+    updateSectionOrder(wrap);
 
     var count = qsa(".hm-mm-section", wrap).length;
     setStatus("JS ready (current sections: " + count + ")", true);

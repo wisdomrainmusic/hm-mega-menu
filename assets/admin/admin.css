@@ -87,7 +87,7 @@
   padding: 12px;
 }
 
-.hm-mm-section__handle {
+.hm-mm-handle {
   cursor: grab;
   user-select: none;
   font-size: 18px;

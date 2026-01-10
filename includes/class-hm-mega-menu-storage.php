@@ -123,6 +123,7 @@ class HM_Mega_Menu_Storage {
 	 * - columns (int 1-6)
 	 * - depth (int 1-3)
 	 * - show_title (int 0/1)
+	 * - order (int)
 	 *
 	 * @param mixed $section
 	 * @return array|null
@@ -150,6 +151,7 @@ class HM_Mega_Menu_Storage {
 		$columns    = isset( $section['columns'] ) ? (int) $section['columns'] : 3;
 		$depth      = isset( $section['depth'] ) ? (int) $section['depth'] : 2;
 		$show_title = isset( $section['show_title'] ) ? (int) $section['show_title'] : 1;
+		$order      = isset( $section['order'] ) ? (int) $section['order'] : 0;
 
 		if ( $columns < 1 ) {
 			$columns = 1;
@@ -175,6 +177,7 @@ class HM_Mega_Menu_Storage {
 			'columns'     => $columns,
 			'depth'       => $depth,
 			'show_title'  => $show_title,
+			'order'       => $order,
 		);
 	}
 

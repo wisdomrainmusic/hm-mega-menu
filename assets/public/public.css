@@ -50,20 +50,23 @@ li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
 .hm-mm-panel .hm-mm-sections {
   display: grid !important;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
-  gap: 18px 56px !important;
+  row-gap: 14px !important;
+  column-gap: 64px !important;
   align-items: start !important;
 }
 
 /* Section block */
 .hm-mm-panel .hm-mm-section {
   min-width: 0 !important;
+  padding-bottom: 6px !important;
 }
 
 .hm-mm-panel .hm-mm-section__title {
-  font-weight: 700 !important;
+  color: #111 !important;
+  font-weight: 800 !important;
   font-size: 14px !important;
   line-height: 1.25 !important;
-  margin: 0 0 10px 0 !important;
+  margin: 0 0 12px 0 !important;
 }
 
 /* ===== Layout Contract B: Inside Section Columns ===== */
