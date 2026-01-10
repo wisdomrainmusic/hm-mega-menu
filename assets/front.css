@@ -1,25 +1,24 @@
 /* HM Mega Menu - scoped styles */
-/* Eğer tema Mağaza altında default sub-menu basıyorsa, mega açıkken gizle */
-.hm-has-mega > .sub-menu {
+/* Theme dropdown/sub-menu hide when mega enabled (works even if not direct child) */
+.hm-has-mega ul.sub-menu,
+.hm-has-mega .sub-menu {
   display: none !important;
 }
 
-/* Panel position için li relative kalsın */
 .hm-has-mega {
   position: relative;
 }
 
-/* Panel default hidden */
-.hm-has-mega > .hm-mega-panel {
+/* Force viewport-based width */
+.hm-has-mega .hm-mega-panel {
   position: absolute;
   top: 100%;
-  z-index: 9999;
+  z-index: 999999;
 
-  /* IMPORTANT: li genişliğine bağlı kalmasın */
+  /* 100vw panel, centered */
+  width: 100vw;
   left: 50%;
   transform: translateX(-50%);
-  width: min(1200px, calc(100vw - 48px));
-  max-width: none;
 
   display: none;
   opacity: 0;
@@ -29,30 +28,34 @@
   border-top: 1px solid rgba(0,0,0,0.06);
   box-shadow: 0 10px 30px rgba(0,0,0,0.10);
 
-  padding: 24px;
+  padding: 24px 0;
+
+  /* Important for long links */
+  white-space: normal;
 }
 
 /* Open on hover (desktop) */
 @media (hover: hover) and (pointer: fine) {
-  .hm-has-mega:hover > .hm-mega-panel,
-  .hm-has-mega:focus-within > .hm-mega-panel {
+  .hm-has-mega:hover .hm-mega-panel,
+  .hm-has-mega:focus-within .hm-mega-panel {
     display: block;
     opacity: 1;
     visibility: visible;
   }
 }
 
-/* Inner container (keeps content aligned) */
-.hm-has-mega > .hm-mega-panel > .hm-mega-inner {
-  width: 100%;
-  margin: 0;
-}
+.hm-has-mega .hm-mega-panel .hm-mega-inner {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
 
-/* Grid baseline */
-.hm-mega-inner {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
+}
+
+/* Grid baseline */
+.hm-has-mega .hm-mega-panel .hm-mega-col {
+  min-width: 0;
 }
 
 /* Column demo styles (future blocks will use these) */
@@ -72,15 +75,15 @@
   margin: 6px 0;
 }
 
-.hm-mega-links a {
-  text-decoration: none;
-  display: inline-block;
+.hm-has-mega .hm-mega-panel .hm-mega-links a {
+  display: block;
   line-height: 1.4;
+  text-decoration: none;
 }
 
 /* Mobile fallback: panel stays hidden until JS (later) */
 @media (hover: none) and (pointer: coarse) {
-  .hm-has-mega > .hm-mega-panel {
+  .hm-has-mega .hm-mega-panel {
     display: none;
     opacity: 0;
     visibility: hidden;
