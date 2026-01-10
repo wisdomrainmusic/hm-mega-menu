@@ -55,9 +55,14 @@ final class HM_MM_Plugin {
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-i18n.php';
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-admin.php';
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-public.php';
+
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-utils.php';
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-schema.php';
 		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-storage.php';
+
+		// New frontend renderer + walker (Commit 4).
+		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-render.php';
+		require_once HM_MM_PLUGIN_DIR . 'includes/class-hm-mm-walker.php';
 
 		$this->loader = new HM_MM_Loader();
 	}
@@ -97,6 +102,9 @@ final class HM_MM_Plugin {
 		$public = new HM_MM_Public( $this->plugin_name, $this->version );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $public, 'enqueue_assets' );
+
+		// Inject via walker (frontend only).
+		$this->loader->add_filter( 'wp_nav_menu_args', $public, 'filter_nav_menu_args' );
 	}
 
 	/**
