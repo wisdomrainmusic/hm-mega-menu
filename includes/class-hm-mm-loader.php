@@ -32,11 +32,14 @@ final class HM_MM_Loader {
 	}
 
 	public function enqueue_assets() {
+		$css_file = HM_MM_PATH . 'assets/front.css';
+		$ver      = file_exists( $css_file ) ? filemtime( $css_file ) : HM_MM_VERSION;
+
 		wp_enqueue_style(
 			'hm-mega-menu-front',
 			HM_MM_URL . 'assets/front.css',
 			array(),
-			HM_MM_VERSION
+			$ver
 		);
 	}
 }
