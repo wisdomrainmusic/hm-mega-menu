@@ -12,8 +12,12 @@ final class HM_MM_Frontend_Hooks {
 		add_filter( 'nav_menu_css_class', array( __CLASS__, 'add_menu_item_classes' ), 10, 4 );
 		add_filter( 'walker_nav_menu_start_el', array( __CLASS__, 'inject_mega_panel' ), 10, 4 );
 
-		// IMPORTANT: if mega enabled on an item, remove its children from frontend output
+		// Standard wp_nav_menu() path (some themes bypass this)
 		add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'remove_children_for_mega_items' ), 20, 2 );
+
+		// Theme-safe fallbacks (Astra/Elementor/header builders)
+		add_filter( 'wp_get_nav_menu_items', array( __CLASS__, 'filter_items_at_source' ), 20, 3 );
+		add_filter( 'wp_nav_menu_items', array( __CLASS__, 'fallback_inject_panels' ), 20, 2 );
 	}
 
 	/**
@@ -81,27 +85,29 @@ final class HM_MM_Frontend_Hooks {
 			return $item_output;
 		}
 
-		$cols = (int) get_post_meta( $item->ID, '_hm_mm_cols', true );
+		return $item_output . self::build_panel_html( $item->ID );
+	}
+
+	private static function build_panel_html( $menu_item_id ) {
+		$cols = (int) get_post_meta( $menu_item_id, '_hm_mm_cols', true );
 		$cols = $cols ? $cols : 4;
 
-		$parent = (int) get_post_meta( $item->ID, '_hm_mm_parent_cat', true );
-		$depthn = (int) get_post_meta( $item->ID, '_hm_mm_depth', true );
+		$parent = (int) get_post_meta( $menu_item_id, '_hm_mm_parent_cat', true );
+		$depthn = (int) get_post_meta( $menu_item_id, '_hm_mm_depth', true );
 		$depthn = $depthn ? $depthn : 2;
 
-		$limit = (int) get_post_meta( $item->ID, '_hm_mm_limit', true );
+		$limit = (int) get_post_meta( $menu_item_id, '_hm_mm_limit', true );
 		$limit = $limit ? $limit : 24;
 
 		$content = self::render_woo_columns( $parent, $cols, $depthn, $limit );
 
-		$panel = '
+		return '
 			<div class="hm-mega-panel" aria-hidden="true">
 				<div class="hm-mega-inner" style="grid-template-columns: repeat(' . (int) $cols . ', minmax(0, 1fr));">
 					' . $content . '
 				</div>
 			</div>
 		';
-
-		return $item_output . $panel;
 	}
 
 	public static function render_woo_columns( $parent_term_id, $cols, $depth, $limit ) {
@@ -203,5 +209,71 @@ final class HM_MM_Frontend_Hooks {
 		}
 
 		return $filtered;
+	}
+
+	/**
+	 * Fallback: remove children at the source so header builders can't re-add them.
+	 */
+	public static function filter_items_at_source( $items, $menu, $args ) {
+		// Reuse the same logic (2nd param is "args" in wp_nav_menu_objects; here it's $args but safe).
+		return self::remove_children_for_mega_items( $items, $args );
+	}
+
+	/**
+	 * Fallback: if walker injection didn't run, inject panels into final HTML.
+	 * This targets <li> elements that already have hm-has-mega class (added by nav_menu_css_class),
+	 * and appends the panel right after the first closing </a> inside that <li>.
+	 */
+	public static function fallback_inject_panels( $items_html, $args ) {
+		if ( empty( $items_html ) || strpos( $items_html, 'hm-has-mega' ) === false ) {
+			return $items_html;
+		}
+		// If panel already exists, do nothing.
+		if ( strpos( $items_html, 'hm-mega-panel' ) !== false ) {
+			return $items_html;
+		}
+
+		// Get menu items for this render (best-effort).
+		$menu_obj = null;
+		if ( ! empty( $args->menu ) ) {
+			$menu_obj = wp_get_nav_menu_object( $args->menu );
+		}
+		if ( ! $menu_obj && ! empty( $args->theme_location ) ) {
+			$locations = get_nav_menu_locations();
+			if ( ! empty( $locations[ $args->theme_location ] ) ) {
+				$menu_obj = wp_get_nav_menu_object( (int) $locations[ $args->theme_location ] );
+			}
+		}
+		if ( ! $menu_obj || empty( $menu_obj->term_id ) ) {
+			return $items_html;
+		}
+
+		$items = wp_get_nav_menu_items( (int) $menu_obj->term_id );
+		if ( empty( $items ) ) {
+			return $items_html;
+		}
+
+		foreach ( $items as $it ) {
+			$enabled = get_post_meta( $it->ID, self::META_ENABLED, true );
+			if ( $enabled !== '1' ) {
+				continue;
+			}
+			// Append panel after the anchor of the matching menu item ID.
+			// Look for the menu-item-123 class which is standard in WP menus.
+			$needle = 'menu-item-' . (int) $it->ID;
+			if ( strpos( $items_html, $needle ) === false ) {
+				continue;
+			}
+			$panel = self::build_panel_html( $it->ID );
+
+			$items_html = preg_replace(
+				'/(<li[^>]*class="[^"]*' . preg_quote( $needle, '/' ) . '[^"]*"[^>]*>.*?<\\/a>)/s',
+				'$1' . $panel,
+				$items_html,
+				1
+			);
+		}
+
+		return $items_html;
 	}
 }
