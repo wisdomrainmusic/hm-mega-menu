@@ -82,6 +82,11 @@ final class HM_MM_Admin_Menu_Fields {
           <?php endforeach; ?>
         </select>
       </label>
+      <?php if ($enabled === '1' && (int) $parent === 0): ?>
+        <em style="display:block; margin-top:6px; color:#b32d2e;">
+          <?php echo esc_html__('Select a parent category, otherwise mega panel shows an empty message.', 'hm-mega-menu'); ?>
+        </em>
+      <?php endif; ?>
     </p>
 
     <p class="field-hm-mm-depth description description-wide">
@@ -154,11 +159,14 @@ final class HM_MM_Admin_Menu_Fields {
       update_post_meta($menu_item_id, '_hm_mm_cols', (string) $cols);
     }
 
-    // Parent category
-    if ( isset($_POST['menu-item-hm-mm-parent'][$menu_item_id]) ) {
-      $parent = (int) $_POST['menu-item-hm-mm-parent'][$menu_item_id];
-      update_post_meta($menu_item_id, '_hm_mm_parent_cat', (string) $parent);
+    // Parent category (always update, even if 0)
+    $parent = 0;
+    if ( isset($_POST['menu-item-hm-mm-parent']) && is_array($_POST['menu-item-hm-mm-parent']) ) {
+      if ( isset($_POST['menu-item-hm-mm-parent'][$menu_item_id]) ) {
+        $parent = (int) $_POST['menu-item-hm-mm-parent'][$menu_item_id];
+      }
     }
+    update_post_meta($menu_item_id, '_hm_mm_parent_cat', (string) $parent);
 
     // Depth
     if ( isset($_POST['menu-item-hm-mm-depth'][$menu_item_id]) ) {
