@@ -63,7 +63,11 @@ li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
   /* Keep 4 columns stable even when viewport shrinks slightly (e.g. DevTools open) */
   column-width: 240px !important;
   column-gap: 48px !important;
-  column-fill: auto !important;
+  /* IMPORTANT:
+     column-fill:auto + auto-height container => browser keeps everything in the first column,
+     making the panel super tall and leaving empty space on the right.
+     Use balanced columns so content actually flows into all 4 columns. */
+  column-fill: balance !important;
 }
 
 /* Keep 4 columns on typical desktop widths (even with DevTools open).
