@@ -3,7 +3,7 @@
  * Plugin Name:       HM Mega Menu
  * Plugin URI:        https://wisdomrainmusic.com
  * Description:       Full-width mega menu panel injection without mutating WordPress menu items.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            WisdomRain
  * Text Domain:       hm-mega-menu
  * Domain Path:       /languages
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'HM_MM_VERSION', '2.0.0' );
+define( 'HM_MM_VERSION', '2.0.1' );
 define( 'HM_MM_PLUGIN_FILE', __FILE__ );
 define( 'HM_MM_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'HM_MM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

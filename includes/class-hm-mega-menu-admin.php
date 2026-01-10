@@ -89,6 +89,7 @@ class HM_Mega_Menu_Admin {
 		?>
 		<div class="wrap hm-mm-wrap">
 			<h1><?php echo esc_html__( 'HM Mega Menu → Builder', 'hm-mega-menu' ); ?></h1>
+			<div id="hm-mm-js-status" data-ok="0">JS status: waiting…</div>
 
 			<?php if ( $notice ) : ?>
 				<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible">

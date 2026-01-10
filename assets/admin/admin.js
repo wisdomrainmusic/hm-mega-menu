@@ -1,4 +1,23 @@
 (function () {
+  try { console.log('[HM Mega Menu] admin.js FILE LOADED'); } catch(e) {}
+
+  // Admin builder script (debug build)
+  // Goal: make it undeniable that the script is loaded and the click handler fires.
+
+  function setStatus(text, ok) {
+    var el = document.getElementById("hm-mm-js-status");
+    if (!el) return;
+    el.textContent = text;
+    el.setAttribute("data-ok", ok ? "1" : "0");
+  }
+
+  function log() {
+    if (!window.console || !console.log) return;
+    var args = Array.prototype.slice.call(arguments);
+    args.unshift("[HM Mega Menu]");
+    console.log.apply(console, args);
+  }
+
   function qs(sel, root) {
     return (root || document).querySelector(sel);
   }
@@ -22,10 +41,18 @@
 
   function addSection(wrap) {
     var tplEl = qs("#hm-mm-section-template");
-    if (!tplEl) return;
+    if (!tplEl) {
+      setStatus("JS loaded, but template not found (#hm-mm-section-template)", false);
+      log("Template element missing");
+      return;
+    }
 
     var tpl = tplEl.innerHTML;
-    if (!tpl || !tpl.trim()) return;
+    if (!tpl || !tpl.trim()) {
+      setStatus("JS loaded, but template is empty", false);
+      log("Template empty");
+      return;
+    }
 
     var index = qsa(".hm-mm-section", wrap).length;
     tpl = tpl.split("__INDEX__").join(String(index));
@@ -35,10 +62,18 @@
 
     // template HTML root is .hm-mm-section
     var node = container.firstElementChild;
-    if (!node) return;
+    if (!node) {
+      setStatus("JS loaded, but could not parse template HTML", false);
+      log("Template parse failed");
+      return;
+    }
 
     wrap.appendChild(node);
     reindexSections(wrap);
+
+    var count = qsa(".hm-mm-section", wrap).length;
+    setStatus("Click OK → section added (total: " + count + ")", true);
+    log("Section added", { total: count });
   }
 
   function bindRemove(wrap) {
@@ -63,19 +98,48 @@
   }
 
   function init() {
+    setStatus("JS loaded (init starting)", true);
+    log("init()");
+
     var wrap = qs("#hm-mm-sections");
-    if (!wrap) return;
+    if (!wrap) {
+      setStatus("JS loaded, but container not found (#hm-mm-sections)", false);
+      log("Sections container missing");
+      return;
+    }
 
     bindRemove(wrap);
 
+    // Bind add button (direct + delegated) for maximum reliability.
     var addBtn = qs("#hm-mm-add-section");
     if (addBtn) {
-      addBtn.addEventListener("click", function () {
+      addBtn.addEventListener("click", function (e) {
+        if (e && e.preventDefault) e.preventDefault();
+        setStatus("Click received → adding section…", true);
+        log("Add button click");
         addSection(wrap);
       });
+    } else {
+      log("Add button missing (#hm-mm-add-section)");
     }
 
+    document.addEventListener("click", function (e) {
+      var t = e && e.target ? e.target : null;
+      if (!t || !t.closest) return;
+      var btn = t.closest("#hm-mm-add-section");
+      if (!btn) return;
+      // If direct binding failed for any reason, this still catches the click.
+      if (e && e.preventDefault) e.preventDefault();
+      setStatus("Click received (delegated) → adding section…", true);
+      log("Add button click (delegated)");
+      addSection(wrap);
+    });
+
     reindexSections(wrap);
+
+    var count = qsa(".hm-mm-section", wrap).length;
+    setStatus("JS ready (current sections: " + count + ")", true);
+    log("ready", { total: count });
   }
 
   if (document.readyState === "loading") {
