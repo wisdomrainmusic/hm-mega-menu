@@ -34,6 +34,81 @@ final class HM_MM_Admin_Menu_Fields {
       </label>
     </p>
     <?php
+    $cols = get_post_meta($item_id, '_hm_mm_cols', true);
+    $cols = $cols ? (int) $cols : 4;
+
+    $parent = get_post_meta($item_id, '_hm_mm_parent_cat', true);
+    $parent = $parent ? (int) $parent : 0;
+
+    $depth = get_post_meta($item_id, '_hm_mm_depth', true);
+    $depth = $depth ? (int) $depth : 2;
+
+    $limit = get_post_meta($item_id, '_hm_mm_limit', true);
+    $limit = $limit ? (int) $limit : 24;
+
+    // Woo categories list
+    $terms = array();
+    if ( taxonomy_exists('product_cat') ) {
+      $terms = get_terms(array(
+        'taxonomy' => 'product_cat',
+        'hide_empty' => false,
+        'parent' => 0,
+        'orderby' => 'name',
+        'order' => 'ASC',
+      ));
+    }
+    ?>
+
+    <p class="field-hm-mm-cols description description-wide">
+      <label for="hm-mm-cols-<?php echo esc_attr($item_id); ?>">
+        <?php echo esc_html__('Columns (3–6)', 'hm-mega-menu'); ?><br/>
+        <select id="hm-mm-cols-<?php echo esc_attr($item_id); ?>" name="menu-item-hm-mm-cols[<?php echo esc_attr($item_id); ?>]">
+          <?php for ($i = 3; $i <= 6; $i++): ?>
+            <option value="<?php echo esc_attr($i); ?>" <?php selected($cols, $i); ?>><?php echo esc_html($i); ?></option>
+          <?php endfor; ?>
+        </select>
+      </label>
+    </p>
+
+    <p class="field-hm-mm-parent description description-wide">
+      <label for="hm-mm-parent-<?php echo esc_attr($item_id); ?>">
+        <?php echo esc_html__('Parent Woo Category (top level)', 'hm-mega-menu'); ?><br/>
+        <select id="hm-mm-parent-<?php echo esc_attr($item_id); ?>" name="menu-item-hm-mm-parent[<?php echo esc_attr($item_id); ?>]">
+          <option value="0"><?php echo esc_html__('-- Select --', 'hm-mega-menu'); ?></option>
+          <?php foreach ($terms as $t): ?>
+            <option value="<?php echo esc_attr($t->term_id); ?>" <?php selected($parent, (int) $t->term_id); ?>>
+              <?php echo esc_html($t->name); ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </label>
+    </p>
+
+    <p class="field-hm-mm-depth description description-wide">
+      <label for="hm-mm-depth-<?php echo esc_attr($item_id); ?>">
+        <?php echo esc_html__('Depth (1–3)', 'hm-mega-menu'); ?><br/>
+        <select id="hm-mm-depth-<?php echo esc_attr($item_id); ?>" name="menu-item-hm-mm-depth[<?php echo esc_attr($item_id); ?>]">
+          <?php for ($i = 1; $i <= 3; $i++): ?>
+            <option value="<?php echo esc_attr($i); ?>" <?php selected($depth, $i); ?>><?php echo esc_html($i); ?></option>
+          <?php endfor; ?>
+        </select>
+      </label>
+    </p>
+
+    <p class="field-hm-mm-limit description description-wide">
+      <label for="hm-mm-limit-<?php echo esc_attr($item_id); ?>">
+        <?php echo esc_html__('Max items (recommended 24–60)', 'hm-mega-menu'); ?><br/>
+        <input type="number"
+          id="hm-mm-limit-<?php echo esc_attr($item_id); ?>"
+          name="menu-item-hm-mm-limit[<?php echo esc_attr($item_id); ?>]"
+          value="<?php echo esc_attr($limit); ?>"
+          min="1"
+          max="200"
+          step="1"
+        />
+      </label>
+    </p>
+    <?php
   }
 
   public static function save_fields($menu_id, $menu_item_db_id, $args) {
@@ -71,5 +146,32 @@ final class HM_MM_Admin_Menu_Fields {
     }
 
     update_post_meta($menu_item_id, self::META_ENABLED, $enabled);
+
+    // Columns
+    if ( isset($_POST['menu-item-hm-mm-cols'][$menu_item_id]) ) {
+      $cols = (int) $_POST['menu-item-hm-mm-cols'][$menu_item_id];
+      $cols = max(3, min(6, $cols));
+      update_post_meta($menu_item_id, '_hm_mm_cols', (string) $cols);
+    }
+
+    // Parent category
+    if ( isset($_POST['menu-item-hm-mm-parent'][$menu_item_id]) ) {
+      $parent = (int) $_POST['menu-item-hm-mm-parent'][$menu_item_id];
+      update_post_meta($menu_item_id, '_hm_mm_parent_cat', (string) $parent);
+    }
+
+    // Depth
+    if ( isset($_POST['menu-item-hm-mm-depth'][$menu_item_id]) ) {
+      $depth = (int) $_POST['menu-item-hm-mm-depth'][$menu_item_id];
+      $depth = max(1, min(3, $depth));
+      update_post_meta($menu_item_id, '_hm_mm_depth', (string) $depth);
+    }
+
+    // Limit
+    if ( isset($_POST['menu-item-hm-mm-limit'][$menu_item_id]) ) {
+      $limit = (int) $_POST['menu-item-hm-mm-limit'][$menu_item_id];
+      $limit = max(1, min(200, $limit));
+      update_post_meta($menu_item_id, '_hm_mm_limit', (string) $limit);
+    }
   }
 }

@@ -75,6 +75,10 @@
   margin: 6px 0;
 }
 
+.hm-has-mega .hm-mega-panel .hm-mega-links li {
+  margin: 6px 0;
+}
+
 .hm-has-mega .hm-mega-panel .hm-mega-links a {
   display: block;
   line-height: 1.4;
