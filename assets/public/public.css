@@ -20,6 +20,7 @@ li.hm-mm-has-mega {
   z-index: 99999 !important;
   display: none !important;
   box-sizing: border-box !important;
+  margin: 0 !important;
 }
 
 li.hm-mm-has-mega.hm-mm-open > .hm-mm-panel {
@@ -37,9 +38,9 @@ li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
 /* Panel inner container */
 .hm-mm-panel .hm-mm-inner {
   box-sizing: border-box !important;
-  max-width: 1280px !important;
+  max-width: 1240px !important;
   margin: 0 auto !important;
-  padding: 18px 22px !important;
+  padding: 22px 26px !important;
   background: #ffffff !important;
   border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
   box-shadow: 0 16px 38px rgba(0, 0, 0, 0.14) !important;
@@ -48,8 +49,8 @@ li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
 /* ===== Layout Contract A: Sections Grid ===== */
 .hm-mm-panel .hm-mm-sections {
   display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
-  gap: 28px !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 18px 56px !important;
   align-items: start !important;
 }
 
@@ -69,7 +70,7 @@ li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
 .hm-mm-panel .hm-mm-section__cols {
   display: grid !important;
   grid-template-columns: repeat(var(--hm-mm-cols), minmax(0, 1fr)) !important;
-  gap: 18px !important;
+  gap: 14px 44px !important;
   align-items: start !important;
 }
 
@@ -78,6 +79,15 @@ li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
 }
 
 /* ===== Compact reset inside panel ===== */
+.hm-mm-panel,
+.hm-mm-panel * {
+  line-height: 1.25 !important;
+}
+
+.hm-mm-panel {
+  font-size: 13px;
+}
+
 .hm-mm-panel .hm-mm-inner ul,
 .hm-mm-panel .hm-mm-inner ol {
   list-style: none !important;
@@ -101,7 +111,7 @@ li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
 
 /* Block */
 .hm-mm-panel .hm-mm-block {
-  margin: 0 0 12px 0 !important;
+  margin: 0 0 8px 0 !important;
 }
 
 .hm-mm-panel .hm-mm-block:last-child {
@@ -159,4 +169,22 @@ li.hm-mm-has-mega.hm-mm-open > ul.sub-menu {
   li.hm-mm-has-mega > .hm-mm-panel {
     display: none !important;
   }
+}
+
+
+/* ===== Layout Contract C: Collapse placeholder/empty blocks ===== */
+.hm-mm-panel .hm-mm-block:empty{
+  display:none !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+.hm-mm-panel .hm-mm-links:empty,
+.hm-mm-panel .hm-mm-sublinks:empty{
+  display:none !important;
+}
+.hm-mm-panel .hm-mm-block_title:empty,
+.hm-mm-panel .hm-mm-section__title:empty{
+  display:none !important;
+  margin:0 !important;
+  padding:0 !important;
 }
